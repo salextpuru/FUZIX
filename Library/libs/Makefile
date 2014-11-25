@@ -3,7 +3,8 @@ ASM = sdasz80
 AR = sdar
 LINKER = sdldz80
 
-CC_OPT = -mz80 -c --opt-code-size --std-c99 --max-allocs-per-node 2000000 -I../include
+#CC_OPT = -mz80 -c --opt-code-size --std-c99 --max-allocs-per-node 2000000 -I../include
+CC_OPT = -mz80 -c --opt-code-size --std-c99 --max-allocs-per-node 200000 -I../include
 #CC_OPT = -mz80 --std-c99 -c --opt-code-size --max-allocs-per-node 20000 -I../include
 #--oldralloc
 ASM_OPT = -l -o -s
@@ -12,7 +13,8 @@ SRC_CRT0 = crt0.s
 OBJ_CRT0 = $(SRC_CRT0:.s=.rel)
 SRC_ASM =
 OBJ_ASM = $(SRC_ASM:.s=.rel)
-SRC_C =  abort.c asctime.c assert.c atexit.c
+SRC_C = _modslonglong.c _modulonglong.c
+SRC_C += abort.c asctime.c assert.c atexit.c
 SRC_C += bcmp.c bcopy.c bsearch.c bzero.c calloc.c cfree.c clock.c closedir.c
 SRC_C += creat.c crypt.c ctime.c ctype.c difftime.c errno.c error.c execl.c execv.c
 SRC_C += execvp.c exit.c fclose.c fflush.c fgetc.c fgetgrent.c fgetpwent.c

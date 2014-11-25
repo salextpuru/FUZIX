@@ -15,10 +15,10 @@ static unsigned char zsd_wrblk(unsigned char count, unsigned long nsect, void* b
 unsigned char sd_blockdev_count=0;
 
 // offset block for reading (first sector of UZI image)
-unsigned long part_offset=2048;
+unsigned long part_offset;
 
 // 
-unsigned long part_size=32UL*1024UL*1024UL;
+unsigned long part_size;
 
 int sd_open(uint8_t minor, uint16_t flag){
 	flag;
@@ -56,13 +56,20 @@ int sd_write(uint8_t minor, uint8_t rawflag, uint8_t flag){
 	return (0);
 }
 
+
 int sd_init(){
+	char* buf=(char*)(udata.u_buf->bf_blk);
 	char present=!(zsd_init() | zsd_cmp());
 	
 	kprintf("Probe Z-Controller SD-card... %s\r\n",present?"Ok":"Not found");
-	///@TODO Insert partition autodetect
+	
 	if(present){
 		sd_blockdev_count++;
+		if(zsd_rdblk(1, 0, buf)){
+			return(-1);
+		}
+		//			  start    part2    sect
+		memcpy(&part_offset, buf+(0x01BE + 0x0010 + 0x008) , sizeof(long));
 	}
 	//
 	return (0);

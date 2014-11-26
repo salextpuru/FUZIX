@@ -31,11 +31,6 @@ main(int argc, char *argval[])
     char  cprompt;
     char  *home;
     char  *argv[MAX_ARGS+1];
-    
-    // sfs
-    char* sbuf;
-    int   sarg;
-    int   snarg;
 
     login_sh = 0;
     if (argval[0][0] == '-') login_sh = 1;
@@ -61,32 +56,10 @@ main(int argc, char *argval[])
             buf[strlen(buf) - 1] = '\0';   /* Strip newline from fgets */
         }
         while (buf[0] == (char) 0);
-
-	sbuf=buf;
-	sarg=0;
-	snarg=0;
-	while(*sbuf){
-		arg[sarg][snarg++]=*(sbuf);
-		
-		if( (*sbuf)<=0x20){
-			arg[sarg][snarg]='\0';
-			snarg=0;
-			sarg++;
-			
-			while((*sbuf)&&((*sbuf)<=0x20)){
-				sbuf++;
-			}
-			if(!*sbuf){
-				break;
-			}
-		}
-		sbuf++;
-	}
-
-//        count = sscanf(buf, "%s %s %s %s %s %s %s %s %s %s %s",
-//                            cmd,
-//                            arg[0], arg[1], arg[2], arg[3], arg[4],
-//                            arg[5], arg[6], arg[7], arg[8], arg[9]);
+        count = sscanf(buf, "%s %s %s %s %s %s %s %s %s %s %s",
+                            cmd,
+                            arg[0], arg[1], arg[2], arg[3], arg[4],
+                            arg[5], arg[6], arg[7], arg[8], arg[9]);
 
         /* Check for User-Requested Exit back to Login Prompt */
         if (strcmp(cmd, "exit") == 0)

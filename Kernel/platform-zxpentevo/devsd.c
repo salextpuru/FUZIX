@@ -38,40 +38,79 @@ int sd_close(uint8_t minor){
 }
 
 int sd_read(uint8_t minor, uint8_t rawflag, uint8_t flag){
-	flag; minor; rawflag;
+	unsigned long sec;
+	irqflags_t irq;
+	minor; flag;
 	
 	if (rawflag != 0)
 		return 0;
 	
+	if(minor >= sd_blockdev_count){
+        	udata.u_error = EIO;
+		return -1;
+	}
 	
+	sec = part_offset + (unsigned long)(udata.u_buf->bf_blk);
 	
-	// dptr = (uint16_t)udata.u_buf->bf_data;
-	// block = udata.u_buf->bf_blk;
+	irq = di();
+	if(!zsd_rdblk(1, sec, udata.u_buf->bf_data)){
+		irqrestore(irq);
+		return(1);
+	}
 	
-	return (!zsd_rdblk(1, part_offset+udata.u_buf->bf_blk, udata.u_buf->bf_data));
+	irqrestore(irq);
+	return (0);
 }
 
 int sd_write(uint8_t minor, uint8_t rawflag, uint8_t flag){
-	flag; minor; rawflag;
+	unsigned long sec;
+	irqflags_t irq;
+	minor; flag;
+	
+	if (rawflag != 0)
+		return 0;
+	
+	if(minor >= sd_blockdev_count){
+        	udata.u_error = EIO;
+		return -1;
+	}
+	
+	
+	sec = part_offset + (unsigned long)(udata.u_buf->bf_blk);
+	
+	irq = di();
+	if(!zsd_wrblk(1, sec, udata.u_buf->bf_data)){
+		irqrestore(irq);
+		return(1);
+	}
+	
+	irqrestore(irq);
 	return (0);
 }
 
 
 int sd_init(){
-	char* buf=(char*)(udata.u_buf->bf_blk);
-	char present=!(zsd_init() | zsd_cmp());
+	char present;
+	irqflags_t irq;
+	// char* buf=(char*)(udata.u_buf->bf_blk);
+	char* buf = (char*)(0x4000);
+	
+	irq = di();
+	present=!(zsd_init() | zsd_cmp());
 	
 	kprintf("Probe Z-Controller SD-card... %s\r\n",present?"Ok":"Not found");
 	
 	if(present){
 		sd_blockdev_count++;
 		if(zsd_rdblk(1, 0, buf)){
+			irqrestore(irq);
 			return(-1);
 		}
 		//			  start    part2    sect
 		memcpy(&part_offset, buf+(0x01BE + 0x0010 + 0x008) , sizeof(long));
 	}
 	//
+	irqrestore(irq);
 	return (0);
 }
 

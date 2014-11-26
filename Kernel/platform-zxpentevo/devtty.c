@@ -55,7 +55,6 @@ void kputchar(char c)
 {
 	if (c == '\n')
 		tty_putc(0, '\r');
-
 	tty_putc(0, c);
 }
 
@@ -116,7 +115,7 @@ void tty_pollirq(void)
 		uint8_t m = 0x10;
 		for (n = 4; n >= 0; n--) {
 			if ((keybuf[i] & m) && !(keymap[i] & m))
-				if (!shiftmask[i] & m)
+				if (!(shiftmask[i] & m))
 					keysdown--;
 
 			if (!(keybuf[i] & m) && (keymap[i] & m)) {

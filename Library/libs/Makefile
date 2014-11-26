@@ -4,8 +4,9 @@ AR = sdar
 LINKER = sdldz80
 
 #CC_OPT = -mz80 -c --opt-code-size --std-c99 --max-allocs-per-node 2000000 -I../include
-CC_OPT = -mz80 -c --opt-code-size --std-c99 --max-allocs-per-node 200000 -I../include
-#CC_OPT = -mz80 --std-c99 -c --opt-code-size --max-allocs-per-node 20000 -I../include
+#CC_OPT = -mz80 -c --opt-code-size --std-c99 --max-allocs-per-node 200000 -I../include
+CC_OPT = -mz80 -c --opt-code-size --std-c99 -I../include
+
 #--oldralloc
 ASM_OPT = -l -o -s
 LINKER_OPT = -m -i -o

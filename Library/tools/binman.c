@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include "../../Kernel/platform/config.h"
 
 /*
  *	This is a close relative of the kernel binman but produces
@@ -76,7 +77,7 @@ int main(int argc, char *argv[]) {
     memcpy(buf + s__INITIALIZED, buf + s__INITIALIZER, l__INITIALIZER);
     /* Write out everything that is data, omit everything that will
        be zapped */
-    if (fwrite(buf + 0x100, s__DATA - 0x100, 1, bin) != 1) {
+    if (fwrite(buf + (unsigned int)PROGBASE, s__DATA - (unsigned int)PROGBASE, 1, bin) != 1) {
         perror(argv[3]);
         exit(1);
     }

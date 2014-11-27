@@ -22,4 +22,6 @@ mwin3_port	.equ	0xF7F7
      ld bc,#mwin3_port
      cpl
      out (c),a
+     cpl
 .endm
+

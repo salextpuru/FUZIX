@@ -15,6 +15,10 @@
 		; from initializer
 		.area _INITIALIZER
 
+		.globl	l__INITIALIZER
+		.globl	s__INITIALIZED
+		.globl	s__INITIALIZER
+
 		.globl ___stdio_init_vars
 		.globl _main
 		.globl _exit
@@ -64,6 +68,16 @@ start2:		ld hl, #l__DATA - 1	 ; work around linker limit
 
 		.area _GSINIT
 gsinit:
+		
+		ld	bc, #l__INITIALIZER
+		ld	a, b
+		or	a, c
+		jr	Z, gsinit_next
+		ld	de, #s__INITIALIZED
+		ld	hl, #s__INITIALIZER
+		ldir
+gsinit_next:
+		
 		call ___stdio_init_vars
 ;
 ;	Any gsinit code from other modules will accumulate between here

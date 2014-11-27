@@ -23,6 +23,10 @@ unsigned long part_size;
 int sd_open(uint8_t minor, uint16_t flag){
 	flag;
 
+	if(minor <= sd_blockdev_count){
+		sd_init();
+	}
+
 	if(minor < sd_blockdev_count){
         	return 0;
 	} else {
@@ -47,7 +51,7 @@ int sd_read(uint8_t minor, uint8_t rawflag, uint8_t flag){
 		return 0;
 	
 	if(minor >= sd_blockdev_count){
-        	udata.u_error = EIO;
+		udata.u_error = EIO;
 		return -1;
 	}
 	
@@ -56,6 +60,10 @@ int sd_read(uint8_t minor, uint8_t rawflag, uint8_t flag){
 	irq = di();
 	if(!zsd_rdblk(1, sec, udata.u_buf->bf_data)){
 		r=1;
+	}
+	else{
+		udata.u_error = EIO;
+		r=-1;
 	}
 	
 	irqrestore(irq);
@@ -81,6 +89,10 @@ int sd_write(uint8_t minor, uint8_t rawflag, uint8_t flag){
 	irq = di();
 	if(!zsd_wrblk(1, sec, udata.u_buf->bf_data)){
 		r=1;
+	}
+	else{
+		udata.u_error = EIO;
+		r=-1;
 	}
 	
 	irqrestore(irq);

@@ -1,5 +1,5 @@
 # CODE 1
-CSRCS = devices.c main.c devtty.c 
+CSRCS = devices.c main.c devtty.c
 ASRCS = crt0.s zxpentevo.s zxvideo.s
 ASRCS += tricks.s commonmem.s devsd_hw.s
 

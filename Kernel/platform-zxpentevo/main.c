@@ -9,11 +9,11 @@ uint8_t *ramtop = PROGTOP;
 
 void pagemap_init(void)
 {
-  // 0 2 5 1 - used by kernel
+  // 0 5 2 1 - used by kernel
   
   // Add free pages
   unsigned char i;
-  for(i=128; i<(128+16); i++){
+  for(i=128; i<(128+64); i++){
 	 pagemap_add(i);
   }
 }

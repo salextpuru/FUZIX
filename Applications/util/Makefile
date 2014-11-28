@@ -6,8 +6,8 @@ LINKER = sdcc
 CODELOC= 0xC000
 
 #CC_OPT = -mz80 -c --opt-code-size --std-c89 --max-allocs-per-node 2000000 -I../../Library/include
-CC_OPT = -mz80 --std-c99 -c --opt-code-size --max-allocs-per-node 20000 -I../../Library/include 
-#CC_OPT = -mz80 --std-c99 -c --opt-code-size -I../../Library/include 
+#CC_OPT = -mz80 --std-c99 -c --opt-code-size --max-allocs-per-node 20000 -I../../Library/include 
+CC_OPT = -mz80 --std-c99 -c --opt-code-size -I../../Library/include 
 # --oldralloc
 ASM_OPT = -l -o -s
 LINKER_OPT = -mz80 --nostdlib --no-std-crt0 --code-loc $(CODELOC) --data-loc  0
@@ -44,25 +44,20 @@ SRCS  = init.c \
 	ln.c \
 	ls.c \
 	mkdir.c \
-	mkfs.c \
 	mknod.c \
 	more.c \
 	mount.c \
 	mv.c \
 	od.c \
-	passwd.c \
 	patchcpm.c \
 	printenv.c \
 	prtroot.c \
-	ps.c \
 	pwd.c \
 	rm.c \
 	rmdir.c \
 	sleep.c \
 	su.c \
 	sync.c \
-	termcap.c \
-	tget.c \
 	touch.c \
 	tr.c \
 	true.c \
@@ -74,6 +69,12 @@ SRCS  = init.c \
 	which.c \
 	whoami.c
 
+#	mkfs.c \
+#	passwd.c \
+#	ps.c \
+#	termcap.c \
+#	tget.c \
+
 OBJS = $(SRCS:.c=.rel)
 
 LIBS = ../../Library/libs/syslib.lib
@@ -81,6 +82,8 @@ LIBS = ../../Library/libs/syslib.lib
 APPS = $(OBJS:.rel=)
 
 all: $(APPS)
+	mkdir -p _install
+	cp -f $(APPS) _install/
 
 $(OBJS): $(SRCS)
 
@@ -94,6 +97,7 @@ $(OBJS): $(SRCS)
 
 clean:
 	rm -f $(OBJS) $(APPS) core *~ *.asm *.lst *.sym *.map *.noi *.lk *.ihex *.bin
+	rm -rf _install
 
 rmbak:
 	rm -f *~ core

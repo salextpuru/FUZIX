@@ -15,6 +15,7 @@ mwin3_port	.equ	0xF7F7
      ld a,page
      cpl
      out (c),a
+     cpl
 .endm
 
 ; Set page to win3 (if page in A-register)
@@ -24,4 +25,3 @@ mwin3_port	.equ	0xF7F7
      out (c),a
      cpl
 .endm
-

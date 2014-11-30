@@ -45,6 +45,9 @@ int sd_read(uint8_t minor, uint8_t rawflag, uint8_t flag){
 	unsigned long sec;
 	irqflags_t irq;
 	int r=0;
+	
+	char count=3;
+	
 	minor; flag;
 	
 	if (rawflag != 0)
@@ -58,12 +61,20 @@ int sd_read(uint8_t minor, uint8_t rawflag, uint8_t flag){
 	sec = part_offset + (unsigned long)(udata.u_buf->bf_blk);
 	
 	irq = di();
-	if(!zsd_rdblk(1, sec, udata.u_buf->bf_data)){
-		r=1;
-	}
-	else{
-		udata.u_error = EIO;
-		r=-1;
+	
+	while( (r<=0) || (count) ){
+	
+		if(!zsd_rdblk(1, sec, udata.u_buf->bf_data)){
+			udata.u_error = 0;
+			r=1;
+		}
+		else{
+			sd_init();
+			udata.u_error = EIO;
+			r=-1;
+		}
+		
+		count--;
 	}
 	
 	irqrestore(irq);
@@ -74,6 +85,9 @@ int sd_write(uint8_t minor, uint8_t rawflag, uint8_t flag){
 	unsigned long sec;
 	irqflags_t irq;
 	int r=0;
+	
+	char count=3;
+	
 	minor; flag;
 	
 	if (rawflag != 0)
@@ -87,12 +101,19 @@ int sd_write(uint8_t minor, uint8_t rawflag, uint8_t flag){
 	sec = part_offset + (unsigned long)(udata.u_buf->bf_blk);
 	
 	irq = di();
-	if(!zsd_wrblk(1, sec, udata.u_buf->bf_data)){
-		r=1;
-	}
-	else{
-		udata.u_error = EIO;
-		r=-1;
+	
+	while( (r<=0) || (count) ){
+	
+		if(!zsd_wrblk(1, sec, udata.u_buf->bf_data)){
+			udata.u_error = 0;
+			r=1;
+		}
+		else{
+			sd_init();
+			udata.u_error = EIO;
+			r=-1;
+		}
+		count--;
 	}
 	
 	irqrestore(irq);

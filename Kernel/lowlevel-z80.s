@@ -235,8 +235,7 @@ _doexec:
         ;; push de ; restore stack ... but we're about to discard SP anyway!
         ;; push bc 
 
-        ld hl, (U_DATA__U_ISP)
-        ld sp, hl      ; Initialize user stack, below main() parameters and the environment
+	ld sp,(U_DATA__U_ISP)
 
         ; u_data.u_insys = false
         xor a

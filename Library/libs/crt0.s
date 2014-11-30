@@ -59,12 +59,14 @@ start2:		ld hl, #l__DATA - 1	 ; work around linker limit
 		ldir
 		call gsinit
 
-		ld hl, #4
-		add hl, sp
+		ld hl, #4		; environ
+		add hl,sp
 		ld (_environ), hl
-		ld hl, #_exit		; return vector
-		push hl
-		jp _main		; go
+		call _main
+		jp _exit
+
+
+
 
 		.area _GSINIT
 gsinit:

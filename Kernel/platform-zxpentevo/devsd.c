@@ -62,7 +62,7 @@ int sd_read(uint8_t minor, uint8_t rawflag, uint8_t flag){
 	
 	irq = di();
 	
-	while( (r<=0) || (count) ){
+	while( (r<=0) && (count) ){
 	
 		if(!zsd_rdblk(1, sec, udata.u_buf->bf_data)){
 			udata.u_error = 0;
@@ -78,6 +78,11 @@ int sd_read(uint8_t minor, uint8_t rawflag, uint8_t flag){
 	}
 	
 	irqrestore(irq);
+	
+	if(r<0){
+		kprintf("sd_read error");
+	}
+	
 	return (r);
 }
 
@@ -102,7 +107,7 @@ int sd_write(uint8_t minor, uint8_t rawflag, uint8_t flag){
 	
 	irq = di();
 	
-	while( (r<=0) || (count) ){
+	while( (r<=0) && (count) ){
 	
 		if(!zsd_wrblk(1, sec, udata.u_buf->bf_data)){
 			udata.u_error = 0;
@@ -117,6 +122,11 @@ int sd_write(uint8_t minor, uint8_t rawflag, uint8_t flag){
 	}
 	
 	irqrestore(irq);
+	
+	if(r<0){
+		kprintf("sd_read error");
+	}
+	
 	return (r);
 
 }

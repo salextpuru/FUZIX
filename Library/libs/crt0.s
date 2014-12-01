@@ -65,9 +65,6 @@ start2:		ld hl, #l__DATA - 1	 ; work around linker limit
 		call _main
 		jp _exit
 
-
-
-
 		.area _GSINIT
 gsinit:
 		

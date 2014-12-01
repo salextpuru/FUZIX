@@ -18,7 +18,6 @@ LINKER_OPT = -mz80 --nostdlib --no-std-crt0 --code-loc $(CODELOC) --data-loc  0
 SRCS  = init.c \
 	ssh.c \
 	basename.c \
-	ssh.c \
 	bd.c \
 	cal.c \
 	cat.c \
@@ -38,7 +37,6 @@ SRCS  = init.c \
 	fsck.c \
 	grep.c \
 	id.c \
-	init.c \
 	kill.c \
 	ll.c \
 	ln.c \

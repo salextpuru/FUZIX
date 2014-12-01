@@ -110,36 +110,26 @@ init_hardware:
         ; our vectors are in ROM, so nothing to do here
 _program_vectors:
 	ret
+
         ; bank switching procedure. On entrance:
         ;  A - bank number to set
+        ;  stack: AF, <ret addr>
 switch_bank:
-        di                  ; TODO: we need to call di() instead
+        push bc
         ld (current_map), a
-        ld a, b
-        ld (place_for_b), a
-        ld a, c
-        ld (place_for_c), a
-
-        ld a, (current_map)
 	setmw3a
-        
-        ld a, (place_for_b)
-        ld b, a
-        ld a, (place_for_c)
-        ld c, a
-        ld a, (place_for_a)
-        ei
+        pop bc
+        pop af
         ret
 
 map_kernel:
-        ld (place_for_a), a
+        push af
 map_kernel_nosavea:          ; to avoid double reg A saving
-;        xor a
 	ld a,#kernel_page
         jr switch_bank
 
 map_process:
-        ld (place_for_a), a
+        push af
         ld a, h
         or l
         jr z, map_kernel_nosavea
@@ -147,19 +137,19 @@ map_process:
         jr switch_bank
 
 map_process_always:
-        ld (place_for_a), a
+        push af
         ld a, (U_DATA__U_PAGE)
         jr switch_bank
 
 map_save:
-        ld (place_for_a), a
+        push af
         ld a, (current_map)
         ld (map_store), a
-        ld a, (place_for_a)
+        pop af
         ret
 
 map_restore:
-        ld (place_for_a), a
+        push af
         ld a, (map_store)
         jr switch_bank
 
